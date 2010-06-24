@@ -58,6 +58,7 @@ namespace Toxicity
             metric.NewObj = int.Parse(methodElement.GetAttribute("NewObj"));
             return metric;
         }
+
         private void Add(TypeMetric metric)
         {
             if (IgnoreType(metric.TypeName))
@@ -82,16 +83,17 @@ namespace Toxicity
             if (!typeMetrics.ContainsKey(metric.TypeName))
             {
                 // Workaround for bug in Code Metrics plugin: 
-                // When the interface name prefixes the method name in an implementation, the resulting type becomes implementation.interface rather than implementation
-                if (metric.TypeName.Contains(".") && typeMetrics.ContainsKey(metric.TypeName.Substring(0, metric.TypeName.LastIndexOf('.'))))
+                // When the interface name prefixes the method name in an implementation (usually in generated types), the resulting type becomes implementation.interface rather than implementation
+                var fixedTypeName = metric.TypeName;
+                while (fixedTypeName.Contains(".") && !typeMetrics.ContainsKey(fixedTypeName))
                 {
-                    var fixedTypeName = metric.TypeName.Substring(0, metric.TypeName.LastIndexOf('.'));
-                    metric.TypeName = fixedTypeName;
+                    fixedTypeName = fixedTypeName.Substring(0, fixedTypeName.LastIndexOf('.'));
                 }
-                else
+                if (!typeMetrics.ContainsKey(fixedTypeName))
                 {
-                    throw new ApplicationException("Couldn't find type " + metric.TypeName + " when attempting to add method metric");
+                    throw new ApplicationException("Couldn't find type [" + metric.TypeName + "] or fixed type name [" + fixedTypeName + "] when attempting to add method metric");
                 }
+                metric.TypeName = fixedTypeName;
             }
             typeMetrics[metric.TypeName].Add(metric);
         }
