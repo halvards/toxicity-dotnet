@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Xml;
+using NUnit.Framework;
 
 namespace Toxicity.Test
 {
@@ -27,6 +28,15 @@ namespace Toxicity.Test
         public void ShouldNotIgnoreEmptyString()
         {
             Assert.IsFalse(XmlMetricReader.IgnoreType(""));
+        }
+
+        [Test]
+        public void ShouldCorrectlyReadXmlDocument()
+        {
+            var x = new XmlDocument();
+            x.Load("code-metrics-report.xml");
+            var xmlMetricReader = XmlMetricReader.ReadFromDocument(x);
+            Assert.That(xmlMetricReader.RetrieveTypeList(), Has.Count.GreaterThan(0));
         }
     }
 }
