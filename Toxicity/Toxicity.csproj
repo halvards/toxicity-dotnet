@@ -65,7 +65,9 @@
     <Compile Include="GoogleChart.cs" />
     <Compile Include="MethodMetric.cs" />
     <Compile Include="MetricCalculator.cs" />
-    <Compile Include="MetricThresholds.cs" />
+    <Compile Include="MetricThresholds.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="MetricCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
