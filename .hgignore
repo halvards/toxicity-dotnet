@@ -1,5 +1,8 @@
 bin$
 obj$
+results
+\.orig$
+\.sln.cache$
 \.suo$
 \.user$
 \.DS_Store
